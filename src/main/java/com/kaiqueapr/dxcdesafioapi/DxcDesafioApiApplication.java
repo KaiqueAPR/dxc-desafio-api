@@ -10,5 +10,4 @@ public class DxcDesafioApiApplication {
 		SpringApplication.run(DxcDesafioApiApplication.class, args);
 	}
 
-
 }
