@@ -3,7 +3,7 @@ package com.kaiqueapr.dxcdesafioapi.controllers;
 import com.kaiqueapr.dxcdesafioapi.dtos.ClienteResponseDto;
 import com.kaiqueapr.dxcdesafioapi.dtos.CriarClienteRequestDto;
 import com.kaiqueapr.dxcdesafioapi.services.ClienteService;
-import org.springframework.beans.factory.annotation.Autowired;
+import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -12,8 +12,11 @@ import java.util.List;
 @RequestMapping("/cliente")
 public class ClienteController {
 
-    @Autowired
-    private ClienteService clienteService;
+    private final ClienteService clienteService;
+
+    public ClienteController(ClienteService clienteService) {
+        this.clienteService = clienteService;
+    }
 
     @GetMapping
     public List<ClienteResponseDto> lista(){
@@ -21,17 +24,17 @@ public class ClienteController {
     }
 
     @GetMapping("/{cdCliente}")
-    public ClienteResponseDto acharClientePorId(Integer cdCliente){
+    public ClienteResponseDto acharClientePorId(@PathVariable("cdCliente") Integer cdCliente){
         return clienteService.acharClientePorId(cdCliente);
     }
 
-    @PostMapping("/novoCliente")
-    public ClienteResponseDto novoCliente(CriarClienteRequestDto clienteRequest) {
+    @PostMapping("/novo")
+    public ClienteResponseDto novoCliente(@RequestBody @Valid CriarClienteRequestDto clienteRequest) {
         return clienteService.novoCliente(clienteRequest);
     }
 
     @PutMapping("/{cdCliente}")
-    public ClienteResponseDto updatePorId(@RequestBody CriarClienteRequestDto criarClienteRequestDto, @PathVariable("cdCliente") Integer cdCliente){
+    public ClienteResponseDto updatePorId(@RequestBody @Valid CriarClienteRequestDto criarClienteRequestDto, @PathVariable("cdCliente") Integer cdCliente){
         return clienteService.updatePorId(criarClienteRequestDto, cdCliente);
     }
 

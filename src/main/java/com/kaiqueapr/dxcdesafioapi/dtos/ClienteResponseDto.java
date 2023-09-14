@@ -6,7 +6,7 @@ import lombok.Data;
 public class ClienteResponseDto {
 
     private Integer cdCliente;
-    private String nmNome;
+    private String nmCliente;
     private String nmEmail;
     private String nrTelefone;
 
