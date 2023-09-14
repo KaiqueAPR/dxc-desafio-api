@@ -8,9 +8,11 @@ import com.kaiqueapr.dxcdesafioapi.repositories.ClienteRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -29,10 +31,11 @@ return converteParaDto(cliente);
 }
 
 /*Método responsável por retornar uma lista de todos os Clientes*/
-public List<ClienteResponseDto> listaClientes(){
-List<ClienteModel> all = clienteRepository.findAll();
+public Page<ClienteResponseDto> listaClientes(Pageable pageable){
+Page<ClienteModel> all = clienteRepository.findAll(pageable);
 ModelMapper modelMapper = new ModelMapper();
-return all.stream().map(clienteModel -> modelMapper.map(clienteModel, ClienteResponseDto.class)).collect(Collectors.toList());
+return new PageImpl<ClienteResponseDto>(all.stream().map(clienteModel -> modelMapper.map(clienteModel, ClienteResponseDto.class)).collect(Collectors.toList()));
+
 }
 
 /*Método responsável por achar um Cliente atráves da variável 'cdCliente'*/
@@ -40,7 +43,7 @@ public ClienteResponseDto acharClientePorId(Integer cdCliente){
 Optional<ClienteModel> optional = clienteRepository.findById(cdCliente);
 
 if(optional.isEmpty()){
-    throw new UserNotFound("O usuário que você tentou localizar não existe.");
+throw new UserNotFound("O usuário que você tentou localizar não existe.");
 }
 return converteParaDto(optional.get());
 }
@@ -48,7 +51,7 @@ return converteParaDto(optional.get());
 /*Método responsável por deleter um Cliente atráves da variável 'cdCliente'*/
 public void deletarCliente(Integer cdCliente){
 if(clienteRepository.existsById(cdCliente)){
-    clienteRepository.deleteById(cdCliente);
+clienteRepository.deleteById(cdCliente);
 }
 throw new UserNotFound("O usuário que você tentou localizar não existe.");
 }
@@ -57,10 +60,10 @@ throw new UserNotFound("O usuário que você tentou localizar não existe.");
 public ClienteResponseDto updatePorId(CriarClienteRequestDto criarClienteRequestDto, Integer cdCliente){
 Optional<ClienteModel> optional = clienteRepository.findById(cdCliente);
 if(optional.isPresent()){
-    ClienteModel cliente = optional.get();
-    BeanUtils.copyProperties(criarClienteRequestDto, cliente);
-    cliente = clienteRepository.save(cliente);
-    return converteParaDto(cliente);
+ClienteModel cliente = optional.get();
+BeanUtils.copyProperties(criarClienteRequestDto, cliente);
+cliente = clienteRepository.save(cliente);
+return converteParaDto(cliente);
 }
 throw new UserNotFound("O usuário que você tentou localizar não existe.");
 }
