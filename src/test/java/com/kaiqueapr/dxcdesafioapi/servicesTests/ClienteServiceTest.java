@@ -6,19 +6,26 @@ import com.kaiqueapr.dxcdesafioapi.services.ClienteService;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.List;
 import java.util.Optional;
 
-@DataJpaTest
+@SpringBootTest
 public class ClienteServiceTest {
 
-    @MockBean
+    private static final Integer cdCliente = 1;
+    private static final String nmCliente = "Kaique Teste";
+    private static final String nmEmail = "kaiqueteste@hotmail.com";
+    private static final String nrTelefone = "1399999999";
+    private static final String cdSenha = "senhaTeste";
+
+    @InjectMocks
     private ClienteService clienteService;
 
-    @MockBean
+    @Mock
     private ClienteRepository clienteRepository;
 
     /*JUnit teste para validar a criação de um novo Cliente. A verificação ocorre perguntando se o código do Cliente gerado é maior do que 0
@@ -28,12 +35,7 @@ public class ClienteServiceTest {
     @Order(1)
     public void novoClienteTest() {
 
-        ClienteModel cliente = ClienteModel.builder()
-                .cdCliente(1)
-                .nmCliente("Kaique Teste")
-                .nmEmail("kaiqueteste@hotmail.com")
-                .nrTelefone("1399999999")
-                .cdSenha("senhaTeste").build();
+        ClienteModel cliente = criaCliente();
 
         clienteRepository.save(cliente);
 
@@ -44,8 +46,18 @@ public class ClienteServiceTest {
     @Test
     @Order(2)
     public void acharClientePorIdTest() {
+
         ClienteModel cliente = clienteRepository.findById(1).get();
-        Assertions.assertThat(cliente.getCdCliente()).isEqualTo(1);
+        ClienteModel clienteExistente = criaCliente();
+
+        System.out.println("Este é o cliente do teste:" );
+        System.out.println(cliente);
+        System.out.println("Este é o cliente comparador:" );
+        System.out.println(clienteExistente);
+
+
+
+        Assertions.assertThat(cliente).isEqualTo(clienteExistente);
     }
 
     @Test
@@ -84,6 +96,21 @@ public class ClienteServiceTest {
         }
 
         Assertions.assertThat(cliente1).isNull();
+
+    }
+
+    private ClienteModel criaCliente() {
+
+        ClienteModel cliente = ClienteModel.builder()
+                .cdCliente(1)
+                .nmCliente("Kaique Teste")
+                .nmEmail("kaiqueteste@hotmail.com")
+                .nrTelefone("1399999999")
+                .cdSenha("senhaTeste").build();
+
+        clienteRepository.save(cliente);
+
+        return cliente;
 
     }
 }
