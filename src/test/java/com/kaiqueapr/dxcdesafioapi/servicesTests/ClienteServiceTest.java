@@ -32,7 +32,6 @@ public class ClienteServiceTest {
      * Teste de validação do método POST
      * */
     @Test
-    @Order(1)
     public void novoClienteTest() {
 
         ClienteModel cliente = criaCliente();
@@ -44,7 +43,6 @@ public class ClienteServiceTest {
     }
 
     @Test
-    @Order(2)
     public void acharClientePorIdTest() {
 
         ClienteModel cliente = clienteRepository.findById(1).get();
@@ -61,14 +59,12 @@ public class ClienteServiceTest {
     }
 
     @Test
-    @Order(3)
     public void listaClientesTest() {
         List<ClienteModel> listaCliente = clienteRepository.findAll();
         Assertions.assertThat(listaCliente.size()).isGreaterThan(0);
     }
 
     @Test
-    @Order(4)
     public void updatePorIdTest() {
         ClienteModel cliente = clienteRepository.findById(1).get();
 
@@ -80,7 +76,6 @@ public class ClienteServiceTest {
     }
 
     @Test
-    @Order(5)
     public void deletarClienteTest() {
 
         ClienteModel cliente = clienteRepository.findById(1).get();
